@@ -1,15 +1,33 @@
-import requests
-from json import JSONEncoder
-# from xml import XMLEncoder
-url="https://api.indiankanoon.org/search/?formInput=smuggling&maxpages=100&pagenum=600"
-api = "2852f54424a360a69edc0feebedf8b8a969e93b3"
-headers={
-    "Authorization": "Token " + api,
-    "format": "json"
-}
-response = requests.post(url, headers=headers)
-if response.status_code == 200:
-    data = response.json()  # Assuming API returns JSON
-    print(JSONEncoder().encode(data))
-else:
-    print("Request failed with status code:", response.status_code)
+import json
+
+xz="theft"
+f= open(f"{xz}_laws.json","w+")
+f2=open(f"{xz}_cases.json","w+")
+f.write("[")
+f.write("\n")
+f2.write("[")
+f2.write("\n")
+for i in range(1,5):
+    file=f"{xz}"+str(i)+".json"
+    with open(f"./database/{xz}"+str(i)+".json") as f1:
+        # exit()
+
+        # print(f1.readline())
+        # exit()
+        # content = f1.read()
+        data=json.load(f1)
+        # print(data)
+        a=data['docs']
+        for doc in a:
+            x= str(doc['title'])
+            x=x.lower()
+            x=x.split()
+            if("section" in x or "penal" in x):
+                f.write(json.dumps(doc))
+                f.write(",\n")
+            else:
+                f2.write(json.dumps(doc))
+                f2.write(",\n")
+
+f.write("]")
+f2.write("]")
