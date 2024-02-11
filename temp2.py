@@ -8,8 +8,7 @@ firebase_admin.initialize_app(cred)
 
 db=firestore.client()
 
-xz="murder"
-file=f"{xz}"+"_laws.json"
+xz="theft"
 with open(f"./database/{xz}"+"_laws.json") as f1:
     data=json.load(f1)
     # print(data)
