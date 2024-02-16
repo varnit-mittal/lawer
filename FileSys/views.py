@@ -95,10 +95,10 @@ class GetFileView(APIView):
     def get(self, request):
         bucket = storage.bucket()
         try:
-            filename = request.data.get('filename')
-            print(request.data)
-            print('_------------------',filename)
-            return Response({'error': 'Please provide a filename'}, status=status.HTTP_400_BAD_REQUEST)
+            filename = request.GET.get('filename')
+            # print(request.data)
+            # print('_------------------',filename)
+            # return Response({'error': 'Please provide a filename'}, status=status.HTTP_400_BAD_REQUEST)
             blob = bucket.blob(filename)
             url = blob.generate_signed_url(expiration=3600)  # URL expires in 1 hour
             print(url)
