@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser 
 from rest_framework import status
-from django.http import HttpResponse
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse
 import firebase_admin
 from .models import Folder
 from firebase_admin import credentials, storage
@@ -96,15 +96,10 @@ class GetFileView(APIView):
         bucket = storage.bucket()
         try:
             filename = request.GET.get('filename')
-            # print(request.data)
-            # print('_------------------',filename)
-            # return Response({'error': 'Please provide a filename'}, status=status.HTTP_400_BAD_REQUEST)
             blob = bucket.blob(filename)
-            url = blob.generate_signed_url(expiration=3600)  # URL expires in 1 hour
-            print(url)
-            response = HttpResponse(content_type='application/force-download')
+            file_content = blob.download_as_string()
+            response = HttpResponse(file_content, content_type='application/octet-stream')
             response['Content-Disposition'] = 'attachment; filename="{}"'.format(filename)
-            response['X-Accel-Redirect'] = url  # Use Nginx X-Accel-Redirect if possible
             return response
         except FileNotFoundError:
             raise Response({'error': 'User not authenticated'}, status=status.HTTP_404_NOT_FOUND)
