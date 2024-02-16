@@ -22,6 +22,8 @@ from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('folder/',views.FolderView.as_view()),
-    path('file/',views.FileUploadView.as_view()),
+    path('folder/',views.FolderView.as_view()), #create Folder
+    path('fileUpload/',views.FileUploadView.as_view()),  #upload a file in a folder
+    path('file/',views.FileView.as_view()), #get all files and folders and delete also
+    path('getfile/',views.GetFileView.as_view()), #get file
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
