@@ -21,7 +21,7 @@ class FolderView(APIView):
             folder_name = serializer.validated_data['name']
             try:
                 storage.bucket().blob(folder_name + '/').upload_from_string('', content_type='text/plain')  # Creates an empty file to represent the folder
-                serializer.save() 
+                # serializer.save() 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as e:
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
@@ -39,14 +39,13 @@ class FileUploadView(APIView):
         if(folder_name is None or file_obj is None):
             return Response({'error': 'Please provide both folder and file.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            folder = Folder.objects.get(name=folder_name)
+            folder = Folder.objects.get_or_create(name=folder_name)            
         except Folder.DoesNotExist:
             return Response({'folder': 'Folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
         blob = storage.bucket().blob(f'{folder_name}/{file_obj.name}')
         blob.upload_from_file(file_obj)
-        serializer = FileSerializer(data={'name': file_obj.name, 'folder': folder.pk, 'file':file_obj})
-
+        serializer = FileSerializer(data={'name': file_obj.name, 'folder': folder[0].pk, 'file':file_obj})
         if serializer.is_valid():
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_409_CONFLICT)
@@ -96,6 +95,8 @@ class GetFileView(APIView):
         bucket = storage.bucket()
         try:
             filename = request.GET.get('filename')
+            if filename is None:
+                return Response({'error': 'Please provide a filename'}, status=status.HTTP_400_BAD_REQUEST)
             blob = bucket.blob(filename)
             file_content = blob.download_as_string()
             response = HttpResponse(file_content, content_type='application/octet-stream')
