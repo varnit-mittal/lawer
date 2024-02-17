@@ -7,7 +7,6 @@ class Folder(models.Model):
 
 class File(models.Model):
     name = models.CharField(max_length=100)
-    folder = models.ForeignKey(Folder, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     file = models.FileField(upload_to='uploads/')
 

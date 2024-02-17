@@ -39,7 +39,7 @@ class FileUploadView(APIView):
         if(folder_name is None or file_obj is None):
             return Response({'error': 'Please provide both folder and file.'}, status=status.HTTP_400_BAD_REQUEST)
         try:
-            folder = Folder.objects.get(name=folder_name)
+            folder = Folder.objects.all(name=folder_name)[0]
         except Folder.DoesNotExist:
             return Response({'folder': 'Folder does not exist.'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -95,7 +95,7 @@ class GetFileView(APIView):
     def get(self, request):
         bucket = storage.bucket()
         try:
-            filename = request.GET.get('filename')
+            filename = request.data.get('filename')
             blob = bucket.blob(filename)
             file_content = blob.download_as_string()
             response = HttpResponse(file_content, content_type='application/octet-stream')
