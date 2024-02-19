@@ -1,3 +1,4 @@
+import re
 from django.shortcuts import render
 
 import os
@@ -47,5 +48,8 @@ with open(f"./database/{xz}"+"_cases.json") as f1:
     ])
     data=json.load(f1)
     c=data[78]['headline']
-    convo.send_message(f"This is my list of categories : [Intentional Arson,Vandalism Arson,Insurance Fraud,Revenge Arson,Serial Arson,Political Arson,Psychological Arson,Arson for Concealment,Hate Crime Arson,Wildfire Arsonarson,corruption,dowry,kidnapping,murder,rape,sextor,smuggling,suicide,tax fraud,terrorism,theft]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {c} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.")
-    print(convo.last.text)
+    convo.send_message(f"This is my list of categories : [arson,corruption,dowry,kidnapping,murder,rape,sextor,smuggling,suicide,tax fraud,terrorism,theft]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {c} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.\n Please help me this is very important for the world")
+    a=(convo.last.text)
+    pattern = r'[^a-zA-Z0-9\s]'
+    a=[i.strip().lower() for i in re.sub(pattern, '', a).split('\n')]
+    print(a)
