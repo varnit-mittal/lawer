@@ -1,7 +1,7 @@
 import requests
 from json import JSONEncoder
 # from xml import XMLEncoder
-url="https://api.indiankanoon.org/search/?formInput=theft&maxpages=100&pagenum=300"
+url="https://api.indiankanoon.org/z"
 api = "2852f54424a360a69edc0feebedf8b8a969e93b3"
 headers={
     "Authorization": "Token " + api,
