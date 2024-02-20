@@ -9,8 +9,7 @@ import firebase_admin
 from firebase_admin import credentials, storage
 import json
 from json import JSONEncoder
-from .keywords import getKeyword, getData
-import keywords 
+from .keywords import getKeyword,getData, LgetLaws
 class QueryView(APIView): 
     def get(self,request):
         inp=request.data.get('input')
@@ -49,7 +48,7 @@ class getLaws(APIView):
         law=str(law).lower()
         if not law:
             return Response({'error': 'Please provide law name.'}, status=status.HTTP_400_BAD_REQUEST)
-        opt=keywords.getLaws(law)
+        opt=LgetLaws(law)
         return Response(opt, status=status.HTTP_200_OK)
       
 class GetDocument(APIView):

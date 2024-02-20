@@ -89,7 +89,7 @@ def getData(d):
     return opt
             
             
-def getLaws(law):
+def LgetLaws(law):
   with open(f"./database/{law}_laws.json", "r") as f:
     data = json.load(f)
     size=len(data)
