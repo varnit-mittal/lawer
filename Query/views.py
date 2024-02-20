@@ -1,4 +1,5 @@
 import os
+import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser 
@@ -7,9 +8,10 @@ from django.http import FileResponse, HttpResponse, StreamingHttpResponse
 import firebase_admin
 from firebase_admin import credentials, storage
 import json
-from .keywords import getKeyword
-
-class QueryView(APIView):
+from json import JSONEncoder
+from .keywords import getKeyword, getData
+import keywords 
+class QueryView(APIView): 
     def get(self,request):
         inp=request.data.get('input')
         if inp is None:
@@ -23,22 +25,53 @@ class QueryView(APIView):
                 {'error':"Too sensitive to be discussed on this portal. Please provide distinct headers"},
                 status=status.HTTP_406_NOT_ACCEPTABLE
             )
-        with open("unidata.json","r") as f:
-            data=json.load(f)
-            output=[]
-            x=0
-            for i in data:
-                wt=0
-                for j in i['keyword']:
-                    if j in d:
-                        wt+=1
-                x+=1
-                if wt>0:
-                    output.append([x,wt])
-            output.sort(key=lambda x:x[1],reverse=True)
-            opt=[]
-            for i in output:
-                opt.append(data[i[0]])
-            return Response(opt[:min(15,len(opt))],status=status.HTTP_200_OK)
+        opt=getData(d)
+        return Response(opt[:min(15,len(opt))],status=status.HTTP_200_OK)
         
         
+class ListHeaderViews(APIView):
+    '''if error comes in Queryview, do use this'''
+    def get(self,request):
+        lists=request.data.get('lists')
+        d={}
+        for i in lists:
+            d[i]=1
+        if not lists:
+            return Response({'error': 'Please provide list of headers.'}, status=status.HTTP_400_BAD_REQUEST)
+        opt=getData(d)
+        return Response(opt[:min(15,len(opt))],status=status.HTTP_200_OK)
+  
+  
+  
+class getLaws(APIView):
+    def get(self,request):
+        law=request.data.get('lawName')
+        law=str(law).lower()
+        if not law:
+            return Response({'error': 'Please provide law name.'}, status=status.HTTP_400_BAD_REQUEST)
+        opt=keywords.getLaws(law)
+        return Response(opt, status=status.HTTP_200_OK)
+      
+class GetDocument(APIView):
+    '''get document from indian kannon'''
+    def get(self,request):
+        id=request.data.get('id')
+        if not id:
+            return Response({'error': 'Please provide id.'}, status=status.HTTP_400_BAD_REQUEST)
+        api=os.getenv('KANNON')
+        url=f"https://api.indiankanoon.org/doc/{id}/"
+        headers={
+            "Authorization": "Token " + api,
+            "format": "json"
+        }
+        response = requests.post(url, headers=headers)
+        res=response.json()
+        a=str(JSONEncoder().encode(res['doc']))
+        a=a.replace(r"\n","<br>")
+        a=a.replace(r"\u","&#x")
+        a=a.replace(r'\"',r'"')
+        return {
+            "json":res,
+            "html":a,
+            "status":status.HTTP_200_OK
+        }

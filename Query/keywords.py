@@ -1,4 +1,6 @@
+import json
 import os
+import random
 import re
 import google.generativeai as genai
 genai.configure(api_key=os.getenv('GOOGLE_GEMINI_API_KEY'))
@@ -64,3 +66,43 @@ def getKeyword(inp):
       pass
   return []
     
+def getData(d):
+  '''
+    d is the dictionary of keywords with their values 1
+  '''
+  with open("unidata.json","r") as f:
+    data=json.load(f)
+    output=[]
+    x=0
+    for i in data:
+        wt=0
+        for j in i['keyword']:
+            if j in d:
+                wt+=1
+        x+=1
+        if wt>0:
+            output.append([x,wt])
+    output.sort(key=lambda x:x[1],reverse=True)
+    opt=[]
+    for i in output:
+        opt.append(data[i[0]])
+    return opt
+            
+            
+def getLaws(law):
+  with open(f"./database/{law}_laws.json", "r") as f:
+    data = json.load(f)
+    size=len(data)
+    if size<=15:
+      return data
+    l=[]
+    while len(l)<15:
+      num=random.randint(0, size-1)
+      if num not in l:
+        l.append(num)
+    opt=[]
+    for i in l:
+      opt.append(data[i])
+    return opt
+  
+  
