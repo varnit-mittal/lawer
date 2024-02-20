@@ -33,7 +33,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     "FileSys",
-    "Query",
+    # "Query",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",

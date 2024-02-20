@@ -1,49 +1,46 @@
-from django.shortcuts import render
+import os
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.parsers import FileUploadParser, MultiPartParser 
+from rest_framework import status
+from django.http import FileResponse, HttpResponse, StreamingHttpResponse
+import firebase_admin
+from firebase_admin import credentials, storage
+import json
+from .keywords import getKeyword
+cred = credentials.Certificate(json.loads(os.getenv("FIREBASE_SDK")))
+firebase_app = firebase_admin.initialize_app(cred, {
+    'storageBucket': 'calcium-backup-411020.appspot.com'
+})
 
-# Create your views here.
-"""
-At the command line, only need to run once to install the package via pip:
-
-$ pip install google-generativeai
-"""
-
-import google.generativeai as genai
-
-genai.configure(api_key="YOUR_API_KEY")
-
-# Set up the model
-generation_config = {
-  "temperature": 0.9,
-  "top_p": 1,
-  "top_k": 1,
-  "max_output_tokens": 2048,
-}
-
-safety_settings = [
-  {
-    "category": "HARM_CATEGORY_HARASSMENT",
-    "threshold": "BLOCK_ONLY_HIGH"
-  },
-  {
-    "category": "HARM_CATEGORY_HATE_SPEECH",
-    "threshold": "BLOCK_ONLY_HIGH"
-  },
-  {
-    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
-    "threshold": "BLOCK_ONLY_HIGH"
-  },
-  {
-    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
-    "threshold": "BLOCK_ONLY_HIGH"
-  },
-]
-
-model = genai.GenerativeModel(model_name="gemini-1.0-pro",
-                              generation_config=generation_config,
-                              safety_settings=safety_settings)
-
-convo = model.start_chat(history=[
-])
-
-convo.send_message("YOUR_USER_INPUT")
-print(convo.last.text)
+class QueryView(APIView):
+    def get(self,request):
+        inp=request.data.get('input')
+        if inp is None:
+            return Response({'error': 'Please provide input.'}, status=status.HTTP_400_BAD_REQUEST)
+        keywords=getKeyword(inp)
+        d={}
+        for i in keywords:
+            d[i]=1
+        if not keywords: 
+            return Response(
+                {'error':"Too sensitive to be discussed on this portal. Please provide distinct headers"},
+                status=status.HTTP_406_NOT_ACCEPTABLE
+            )
+        with open("unidata.json","r") as f:
+            data=json.load(f)
+            output=[]
+            for i in data:
+                wt=0
+                for j in i['keyword']:
+                    if j in d:
+                        wt+=1
+                if wt>0:
+                    output.append([i,wt])
+            output.sort(key=lambda x:x[1],reverse=True)
+            opt=[]
+            for i in output:
+                opt.append(data[i[0]])
+            return Response(opt[:max(15,len(opt))],status=status.HTTP_200_OK)
+        
+        
