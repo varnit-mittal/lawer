@@ -90,7 +90,7 @@ class GetFileView(APIView):
     def get(self, request):
         bucket = storage.bucket()
         try:
-            filename = request.GET.get('filename')
+            filename = request.data.get('filename')
             blob = bucket.blob(filename)
             file_content = blob.download_as_string()
             response = HttpResponse(file_content, content_type='application/octet-stream')
