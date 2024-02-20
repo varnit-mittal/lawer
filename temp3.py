@@ -33,7 +33,7 @@ model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
 
-xz="dowry"
+xz="tax"
 f2=open(f"U{xz}_cases.json","w+")
 with open(f"./database/{xz}"+"_cases.json","r") as f1:
     data=json.load(f1)
@@ -44,12 +44,12 @@ with open(f"./database/{xz}"+"_cases.json","r") as f1:
       print(f'{z}/{len(data)}')
       try:
         c=i['headline']
-        convo.send_message(f"This is my list of categories : [Dowry Harassment, Dowry Death, Dowry Violence, Dowry Extortion, Dowry Abuse, Dowry-Related Crimes, Dowry Prohibition, Dowry Legislation, Dowry System, Dowry Discrimination,arson,corruption,dowry,kidnapping,murder,rape,sextor,smuggling,suicide,tax fraud,terrorism,theft]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {c} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.")
+        convo.send_message(f"This is my list of categories : [Tax Evasion, False Deductions, Shell Companies, Offshore Accounts, Falsifying Income, Phantom Employees, Money Laundering, Inflating Expenses, Identity Theft, Fraudulent Tax Credits,corruption,dowry,kidnapping,murder,rape,sextor,smuggling,suicide,tax fraud,terrorism,theft]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {c} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.")
         # convo.send_message(f"This is my list of categories : [arson,corruption,dowry,kidnapping,murder,rape,sextor,smuggling,suicide,tax fraud,terrorism,theft]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {c} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.\n Please help me this is very important for the world")
         a=(convo.last.text)
         pattern = r'[^a-zA-Z0-9\s]'
         a=[i.strip().lower() for i in re.sub(pattern, '', a).split('\n')]
         i['keyword']=a
       except:
-        i['keyword']=xz
+        i['keyword']=xz+" fraud"
     json.dump(data,f2,indent=4)
