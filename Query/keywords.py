@@ -43,7 +43,9 @@ allPossible=['Drug Smuggling',' Human Trafficking',' Arms Smuggling',' Contraban
              'Intentional Arson','Vandalism Arson','Insurance Fraud','Revenge Arson','Serial Arson','Political Arson','Psychological Arson','Arson for Concealment','Hate Crime Arson','Wildfire Arson',
              'Domestic Terrorism','International Terrorism','State-Sponsored Terrorism','Cyberterrorism','Religious Terrorism','Political Terrorism','Eco-Terrorism','Narcoterrorism','Lone-Wolf Terrorism','Bioterrorism',
              'Bribery','Embezzlement','Nepotism','Extortion','Money Laundering','Kickbacks','Patronage','Fraud','Graft','Abuse of Power','Kidnapping for Ransom',
-             'Express Kidnapping','Parental Kidnapping','Political Kidnapping','Tiger Kidnapping','Bride Kidnapping','Child Abduction','Virtual Kidnapping','Kidnapping for Extortion','Gang-related Kidnapping'] #TODO - add all possible keywords
+             'Express Kidnapping','Parental Kidnapping','Political Kidnapping','Tiger Kidnapping','Bride Kidnapping','Child Abduction','Virtual Kidnapping','Kidnapping for Extortion','Gang-related Kidnapping',
+             'Petty Theft','Grand Theft','Burglary','Robbery','Shoplifting','Auto Theft','Identity Theft','Embezzlement','Bicycle Theft','Pickpocketing',
+             'Tax Evasion','False Deductions','Shell Companies','Offshore Accounts','Falsifying Income','Phantom Employees','Money Laundering','Inflating Expenses','Identity Theft','Fraudulent Tax Credits'] #TODO - add all possible keywords
 
 def getKeyword(inp):
   # print(inp)
