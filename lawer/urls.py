@@ -19,13 +19,16 @@ from django.urls import path, include
 from FileSys import views
 from django.conf.urls.static import static
 from django.conf import settings
+import os
 from Query import views as qViews
 urlpatterns = [
-    path("admin/", admin.site.urls),
+    path(f"{os.getenv('ADMIN')}/", admin.site.urls),
     path('folder/',views.FolderView.as_view()), #create Folder
     path('fileUpload/',views.FileUploadView.as_view()),  #upload a file in a folder
     path('file/',views.FileView.as_view()), #get all files and folders and delete also
     path('getfile/',views.GetFileView.as_view()), #get file
-    path('caseQuery/',qViews.QueryView.as_view()), 
-    path('listQuery/',qViews.ListHeaderViews.as_view()),
+    path('caseQuery/',qViews.QueryView.as_view()),  #get queries
+    path('listQuery/',qViews.ListHeaderViews.as_view()), 
+    path('getLaws/',qViews.getLaws.as_view()),
+    path('getDocument/',qViews.GetDocument.as_view()),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
