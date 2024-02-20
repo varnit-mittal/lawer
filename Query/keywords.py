@@ -1,7 +1,7 @@
 import os
 import re
 import google.generativeai as genai
-genai.configure(api_key=os.getenv('GOOGLE_API_KEY'))
+genai.configure(api_key=os.getenv('GOOGLE_GEMINI_API_KEY'))
 
 generation_config = {
   "temperature": 0.9,
@@ -33,10 +33,21 @@ model = genai.GenerativeModel(model_name="gemini-1.0-pro",
                               generation_config=generation_config,
                               safety_settings=safety_settings)
 
-allPossible=[] #TODO - add all possible keywords
+allPossible=['Drug Smuggling',' Human Trafficking',' Arms Smuggling',' Contraband Goods Smuggling',' Cigarette Smuggling',' Organ Smuggling',' Art and Antiquities Smuggling',
+             'Technology and Intellectual Property Smuggling','Precious Metals and Minerals Smuggling','Acquaintance Rape',' Date Rape',' Stranger Rape',' Marital Rape', 
+             'Drug-Facilitated Rape',' Gang Rape',' Statutory Rape',' Custodial Rape',' Spousal Rape',' Campus Sexual Assault','arson','corruption','dowry','kidnapping',
+             'murder','rape','sextor','smuggling','suicide','tax fraud','terrorism','theft','Sextortion','Homicide','Manslaughter','Serial Murder','Mass Murder','Assassination',
+             'Accidental Killing','Honor Killing','Robbery-related Murder','Domestic Violence Homicide','Gang-related Homicide','Suicidal Ideation','Suicide Attempt',
+             'Completed Suicide','Assisted Suicide','Copycat Suicide','Suicide Pact','Suicide Contagion','Physician-Assisted Suicide','Suicide Prevention','Suicide Bereavement',
+             'Dowry Harassment','Dowry Death','Dowry Violence','Dowry Extortion','Dowry Abuse','Dowry-Related Crimes','Dowry Prohibition','Dowry Legislation','Dowry System','Dowry Discrimination',
+             'Intentional Arson','Vandalism Arson','Insurance Fraud','Revenge Arson','Serial Arson','Political Arson','Psychological Arson','Arson for Concealment','Hate Crime Arson','Wildfire Arson',
+             'Domestic Terrorism','International Terrorism','State-Sponsored Terrorism','Cyberterrorism','Religious Terrorism','Political Terrorism','Eco-Terrorism','Narcoterrorism','Lone-Wolf Terrorism','Bioterrorism',
+             'Bribery','Embezzlement','Nepotism','Extortion','Money Laundering','Kickbacks','Patronage','Fraud','Graft','Abuse of Power','Kidnapping for Ransom',
+             'Express Kidnapping','Parental Kidnapping','Political Kidnapping','Tiger Kidnapping','Bride Kidnapping','Child Abduction','Virtual Kidnapping','Kidnapping for Extortion','Gang-related Kidnapping'] #TODO - add all possible keywords
 
 def getKeyword(inp):
-  for i in range(5):
+  # print(inp)
+  for i in range(15):
     try:
       convo = model.start_chat(history=[])
       string=",".join(allPossible)
@@ -44,7 +55,9 @@ def getKeyword(inp):
       a=(convo.last.text)
       pattern = r'[^a-zA-Z0-9\s]'
       a=[i.strip().lower() for i in re.sub(pattern, '', a).split('\n')] #list
-      if a:return a
+      # return a
+      if a:
+       return a
     except:
       pass
   return []

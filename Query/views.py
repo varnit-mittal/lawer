@@ -8,10 +8,6 @@ import firebase_admin
 from firebase_admin import credentials, storage
 import json
 from .keywords import getKeyword
-cred = credentials.Certificate(json.loads(os.getenv("FIREBASE_SDK")))
-firebase_app = firebase_admin.initialize_app(cred, {
-    'storageBucket': 'calcium-backup-411020.appspot.com'
-})
 
 class QueryView(APIView):
     def get(self,request):
@@ -30,17 +26,19 @@ class QueryView(APIView):
         with open("unidata.json","r") as f:
             data=json.load(f)
             output=[]
+            x=0
             for i in data:
                 wt=0
                 for j in i['keyword']:
                     if j in d:
                         wt+=1
+                x+=1
                 if wt>0:
-                    output.append([i,wt])
+                    output.append([x,wt])
             output.sort(key=lambda x:x[1],reverse=True)
             opt=[]
             for i in output:
                 opt.append(data[i[0]])
-            return Response(opt[:max(15,len(opt))],status=status.HTTP_200_OK)
+            return Response(opt[:min(15,len(opt))],status=status.HTTP_200_OK)
         
         

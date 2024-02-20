@@ -10,12 +10,6 @@ from .models import Folder
 from firebase_admin import credentials, storage
 from .serializers import FolderSerializer, FileSerializer
 
-# cred = credentials.Certificate(json.loads(os.getenv("FIREBASE_SDK")))
-# firebase_app = firebase_admin.initialize_app(cred, {
-#     'storageBucket': 'calcium-backup-411020.appspot.com'
-# })
-print(os.getenv("FIREBASE_SDK"))
-# exit()
 class FolderView(APIView):
     def post(self, request):
         serializer = FolderSerializer(data=request.data)
