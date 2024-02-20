@@ -74,14 +74,19 @@ def getData(d):
     data=json.load(f)
     output=[]
     x=0
+    print(d)
     for i in data:
         wt=0
-        for j in i['keyword']:
-            if j in d:
-                wt+=1
-        x+=1
+        if type(i['keyword']) == list:
+          for j in i['keyword']:
+              if j in d:
+                  wt+=1
+        else:
+          if i['keyword'] in d:
+                  wt+=1
         if wt>0:
             output.append([x,wt])
+        x+=1
     output.sort(key=lambda x:x[1],reverse=True)
     opt=[]
     for i in output:
