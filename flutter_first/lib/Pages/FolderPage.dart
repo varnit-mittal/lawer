@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first/Pages/FilePage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_first/main.dart';
+import 'package:flutter_first/Pages/OtpPage.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 
 class FoldersPage extends StatefulWidget {
   @override
@@ -9,7 +14,7 @@ class FoldersPage extends StatefulWidget {
 }
 
 class _FoldersPageState extends State<FoldersPage> {
-  List<String> folders = ["Folder 1", "Folder 2", "Folder 3", "Folder 4"];
+  List<String> folders = [];
   List<String> filteredFolders = [];
   TextEditingController searchController = TextEditingController();
 
@@ -17,8 +22,8 @@ class _FoldersPageState extends State<FoldersPage> {
 
   @override
   void initState() {
-    _getThingsOnStartup();
     super.initState();
+    _getThingsOnStartup();
   }
 
   void _getThingsOnStartup() async {
@@ -32,6 +37,43 @@ class _FoldersPageState extends State<FoldersPage> {
       // Permission permanently denied, open app settings
       openAppSettings();
     }
+    String base=OpeningPage.baseUrl;
+    final url =  OpeningPage.baseUrl+'file/';
+    // print(url);
+
+
+    final String uid = OtpPage.Uid;
+    final body = jsonEncode({'uid': uid});
+    //
+    // // Create the HTTP request.
+    final request = http.Request('GET', Uri.parse(url));
+    request.headers['Content-Type'] = 'application/json';
+    request.body = body;
+    //
+    // // Send the request and get the response.
+    final response = await request.send();
+    final responseBody = await response.stream.bytesToString();
+    //
+    // // Print the response body.
+    Map<String,dynamic> rbody = jsonDecode(responseBody);
+    print(rbody["Folders"]);
+
+    for(int i=0;i<rbody["Folders"].length;i++)
+      {
+        String str= rbody["Folders"][i];
+        String result= str.replaceFirst(uid+'/', "");
+        int count=0;
+        for(int j=0;j<result.length;j++)
+          {
+            if(result[j]=='/')
+              count+=1;
+          }
+        if(count==1) {
+          String temp = result.replaceFirst('/', "");
+        folders.add(temp);
+      }
+    }
+    setState(() {});
   }
 
   @override

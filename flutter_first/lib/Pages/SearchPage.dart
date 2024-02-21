@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first/Pages/FolderPage.dart';
+import 'package:flutter_first/Pages/ResultsPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:flutter_first/main.dart';
 
 class SearchPage extends StatefulWidget {
   @override
   _SearchPageState createState() => _SearchPageState();
+  static List myl=[];
 }
+
 
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+    String value1="";
     return Scaffold(
       appBar: AppBar(
         title: Text('Search Case'),
@@ -60,6 +67,10 @@ class _SearchPageState extends State<SearchPage> {
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: TextField(
                       maxLines: 10,
+                      onChanged: (value)
+                      {
+value1=value;
+                      },
                       decoration: InputDecoration(
                         hintText: 'Input your case...',
                         border: OutlineInputBorder(),
@@ -80,8 +91,33 @@ class _SearchPageState extends State<SearchPage> {
                   height:70, //height of button
                   width:170, //width of button
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
+
+
                       // Handle submit button tap
+
+
+                      String base=OpeningPage.baseUrl;
+                      final url =  OpeningPage.baseUrl+'caseQuery/';
+                      final body = jsonEncode({'input': value1});
+
+                      final request = http.Request('GET', Uri.parse(url));
+                      request.headers['Content-Type'] = 'application/json';
+                      request.body = body;
+                      //
+                      // // Send the request and get the response.
+                      final response = await request.send();
+                      final responseBody = await response.stream.bytesToString();
+
+
+                      List myList= jsonDecode(responseBody);
+                      SearchPage.myl=myList;
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ResultsPage()),
+                      );
+
+
                     },
                     child: Text('Submit',style: TextStyle(
     color: Colors.white,)),

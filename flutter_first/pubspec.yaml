@@ -55,7 +55,9 @@ dependencies:
   http: ^0.13.3
   package_info_plus: ^3.0.2
   package_info: ^2.0.0
-  flutter_dotenv: ^latest_version
+  flutter_dotenv: ^5.0.2
+#  flutter_html: ^2.0.0
+#  webview_flutter: ^2.0.13
 
 dev_dependencies:
   flutter_test:
@@ -76,6 +78,8 @@ dev_dependencies:
 flutter:
   assets:
     - lib/assets/
+    - .env
+
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

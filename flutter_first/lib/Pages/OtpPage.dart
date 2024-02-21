@@ -7,11 +7,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_first/main.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+
 
 
 class OtpPage extends StatefulWidget {
   @override
   _OtpPageState createState() => _OtpPageState();
+  static String Uid="";
 }
 
 class _OtpPageState extends State<OtpPage> {
@@ -21,6 +26,7 @@ class _OtpPageState extends State<OtpPage> {
   String code = "";
   int _start = 60; // Timer start value
   Timer? _timer;
+
 
   @override
   void initState() {
@@ -179,7 +185,64 @@ class _OtpPageState extends State<OtpPage> {
           .signInWithCredential(credential);
 
       // Check if the user already exists
-      if (userCredential.user != null) {
+      if (userCredential.user!=null) {
+
+        // print(OpeningPage.baseUrl);
+        String uid = userCredential.user!.uid;
+        OtpPage.Uid = uid;
+        final baseUrl = OpeningPage.baseUrl;
+        final url = baseUrl + 'folder/';
+
+        final body = jsonEncode({'name': uid});
+        var request = http.Request('POST', Uri.parse(url));
+        request.headers['Content-Type'] = 'application/json';
+        request.body = body;
+
+        var response = await request.send();
+        var responseBody = await response.stream.bytesToString();
+        print(responseBody);
+
+        final body1 = jsonEncode({'name': uid + '/Precedents'});
+        var request1 = http.Request('POST', Uri.parse(url));
+        request1.headers['Content-Type'] = 'application/json';
+        request1.body = body1;
+
+        var response1 = await request1.send();
+        var responseBody1 = await response1.stream.bytesToString();
+        print(responseBody1);
+
+
+        final body2 = jsonEncode({'name': uid + '/Case Study'});
+        var request2 = http.Request('POST', Uri.parse(url));
+        request2.headers['Content-Type'] = 'application/json';
+        request2.body = body2;
+
+        var response2 = await request2.send();
+        var responseBody2 = await response2.stream.bytesToString();
+        print(responseBody2);
+        //
+        final body3 = jsonEncode({'name': uid + '/Evidence'});
+        var request3 = http.Request('POST', Uri.parse(url));
+        request3.headers['Content-Type'] = 'application/json';
+        request3.body = body3;
+
+        var response3 = await request3.send();
+        var responseBody3 = await response3.stream.bytesToString();
+        print(responseBody3);
+
+
+        final body4 = jsonEncode({'name': uid + '/Judgement'});
+        var request4 = http.Request('POST', Uri.parse(url));
+        request4.headers['Content-Type'] = 'application/json';
+        request4.body = body4;
+
+        var response4 = await request4.send();
+        var responseBody4 = await response4.stream.bytesToString();
+        print(responseBody4);
+
+
+
+
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => DashboardPage()),

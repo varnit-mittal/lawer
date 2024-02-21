@@ -230,6 +230,12 @@
       "languageVersion": "3.2"
     },
     {
+      "name": "flutter_dotenv",
+      "rootUri": "file:///C:/Users/parya/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_dotenv-5.1.0",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Users/parya/AppData/Local/Pub/Cache/hosted/pub.dev/flutter_lints-3.0.1",
       "packageUri": "lib/",
@@ -620,7 +626,7 @@
       "languageVersion": "3.2"
     }
   ],
-  "generated": "2024-02-20T20:07:35.108478Z",
+  "generated": "2024-02-21T18:21:59.186916Z",
   "generator": "pub",
   "generatorVersion": "3.2.6"
 }
