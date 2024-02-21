@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "844568334612",
+    "project_id": "calcium-backup-411020",
+    "storage_bucket": "calcium-backup-411020.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844568334612:android:4a7f792142643f153f3201",
+        "android_client_info": {
+          "package_name": "com.example.flutter_first"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfG2dsIpvtSLMAD0hIb1OMrYryvinQM2M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
