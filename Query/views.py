@@ -56,6 +56,7 @@ class GetDocument(APIView):
     '''get document from indian kannon'''
     def get(self,request):
         id=request.data.get('id')
+        print(id)
         if not id:
             return Response({'error': 'Please provide id.'}, status=status.HTTP_400_BAD_REQUEST)
         api=os.getenv('KANNON')
@@ -70,6 +71,7 @@ class GetDocument(APIView):
         a=a.replace(r"\n","<br>")
         a=a.replace(r"\u","&#x")
         a=a.replace(r'\"',r'"')
+        a=a.replace(r"\t",'\t')
         return Response({
             "json":res,
             "html":a},status=status.HTTP_200_OK)
