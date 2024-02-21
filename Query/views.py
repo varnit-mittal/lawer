@@ -2,16 +2,21 @@ import os
 import requests
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.parsers import FileUploadParser, MultiPartParser 
 from rest_framework import status
-from django.http import FileResponse, HttpResponse, StreamingHttpResponse
-import firebase_admin
-from firebase_admin import credentials, storage
-import json
 from json import JSONEncoder
 from .keywords import getKeyword,getData, LgetLaws
 class QueryView(APIView): 
     def get(self,request):
+        """
+        Handle GET request for querying precedent based on the input case.
+
+        Parameters:
+        - request: The HTTP request object.
+        - body: The body of the request with "input" set to the required input query
+
+        Returns:
+        - Response: The HTTP response object with the relevant precedent 
+        """
         inp=request.data.get('input')
         if inp is None:
             return Response({'error': 'Please provide input.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -29,7 +34,15 @@ class QueryView(APIView):
         
         
 class ListHeaderViews(APIView):
-    '''if error comes in Queryview, do use this'''
+    '''
+    If you get error in QueryView, then call this endpoint with the list of headers (like ['murder','homicide']) 
+    Parameters:
+        - request: The HTTP request object.
+        - body: The body of the request with "lists" set to the list of headers
+    
+    Returns:
+        - Response: The response object with the list of relevant precedent
+    '''
     def get(self,request):
         lists=request.data.get('lists')
         print(lists)
@@ -44,6 +57,15 @@ class ListHeaderViews(APIView):
   
   
 class getLaws(APIView):
+    '''
+    Handles GET requests for querying laws based on a list of headers 
+    Parameters:
+        - request: The HTTP request object.
+        - body: The body of the request with "lawName" set to the list of headers
+    
+    Returns:
+        - Response: The response object with the list of relevant laws
+    '''
     def get(self,request):
         law=request.data.get('lawName')
         law=str(law).lower()
@@ -53,9 +75,19 @@ class getLaws(APIView):
         return Response(opt, status=status.HTTP_200_OK)
       
 class GetDocument(APIView):
-    '''get document from indian kannon'''
+    '''Gets the document based on the id of the document from Indian Kanoon API
+    Parameters:
+        - request: The HTTP request object.
+        - body: The body of the request with "id" set to the id of the document
+    
+    Returns:
+        - Response: The response object with the "json" as json and "html" as html representation of the document
+    
+    '''
+    
     def get(self,request):
         id=request.data.get('id')
+        print(id)
         if not id:
             return Response({'error': 'Please provide id.'}, status=status.HTTP_400_BAD_REQUEST)
         api=os.getenv('KANNON')
@@ -70,6 +102,7 @@ class GetDocument(APIView):
         a=a.replace(r"\n","<br>")
         a=a.replace(r"\u","&#x")
         a=a.replace(r'\"',r'"')
+        a=a.replace(r"\t",'\t')
         return Response({
             "json":res,
             "html":a},status=status.HTTP_200_OK)
