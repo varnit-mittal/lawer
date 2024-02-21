@@ -87,7 +87,6 @@ class GetDocument(APIView):
     
     def get(self,request):
         id=request.data.get('id')
-        print(id)
         if not id:
             return Response({'error': 'Please provide id.'}, status=status.HTTP_400_BAD_REQUEST)
         api=os.getenv('KANNON')
@@ -103,6 +102,4 @@ class GetDocument(APIView):
         a=a.replace(r"\u","&#x")
         a=a.replace(r'\"',r'"')
         a=a.replace(r"\t",'\t')
-        return Response({
-            "json":res,
-            "html":a},status=status.HTTP_200_OK)
+        return Response(a,status=status.HTTP_200_OK)

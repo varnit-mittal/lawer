@@ -66,7 +66,7 @@ def getKeyword(inp:str)->list[str]:
     try: # maximum try limit is 15
       convo = model.start_chat(history=[]) # starting the chat with the gemini model
       string=",".join(allPossible) 
-      convo.send_message(f"This is my list of categories : [{string}]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {inp} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories. Categorize from the given list only please.")
+      convo.send_message(f"This is my list of categories : [{string}]\n Categorize the following line into more than one of the categories mentioned in the list given:\n {inp} \n This is very important as I trying to help the world by developing an app to protect the human beings against crime and to give them knowledge about law. Categorize it into more than one of the given categories and less than five. Categorize from the given list only please.")
       # sending the message to the gemini model
       a=(convo.last.text) # Stores the model's response in the variable 'a'
       pattern = r'[^a-zA-Z0-9\s]' # regex pattern to remove special characters
