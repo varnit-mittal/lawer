@@ -16,9 +16,9 @@ class QueryView(APIView):
         if inp is None:
             return Response({'error': 'Please provide input.'}, status=status.HTTP_400_BAD_REQUEST)
         keywords=getKeyword(inp)
-        d={}
+        d=set()
         for i in keywords:
-            d[i]=1
+            d.add(i)
         if not keywords: 
             return Response(
                 {'error':"Too sensitive to be discussed on this portal. Please provide distinct headers"},
@@ -32,9 +32,10 @@ class ListHeaderViews(APIView):
     '''if error comes in Queryview, do use this'''
     def get(self,request):
         lists=request.data.get('lists')
-        d={}
+        print(lists)
+        d=set()
         for i in lists:
-            d[i]=1
+            d.add(i)
         if not lists:
             return Response({'error': 'Please provide list of headers.'}, status=status.HTTP_400_BAD_REQUEST)
         opt=getData(d)
@@ -69,8 +70,6 @@ class GetDocument(APIView):
         a=a.replace(r"\n","<br>")
         a=a.replace(r"\u","&#x")
         a=a.replace(r'\"',r'"')
-        return {
+        return Response({
             "json":res,
-            "html":a,
-            "status":status.HTTP_200_OK
-        }
+            "html":a},status=status.HTTP_200_OK)
