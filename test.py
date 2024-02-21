@@ -1,8 +1,10 @@
 import requests
+import os
 from json import JSONEncoder
 # from xml import XMLEncoder
-url="https://api.indiankanoon.org/z"
-api = "2852f54424a360a69edc0feebedf8b8a969e93b3"
+xz=input()
+url=f"https://api.indiankanoon.org/doc/{xz}/"
+api = os.getenv('KANNON')
 headers={
     "Authorization": "Token " + api,
     "format": "json"
