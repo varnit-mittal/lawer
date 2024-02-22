@@ -68,7 +68,7 @@ class getLaws(APIView):
     '''
     def get(self,request):
         law=request.data.get('lawName')
-        law=str(law).lower()
+        law=[str(i).lower().strip() for i in law]
         if not law:
             return Response({'error': 'Please provide law name.'}, status=status.HTTP_400_BAD_REQUEST)
         opt=LgetLaws(law)

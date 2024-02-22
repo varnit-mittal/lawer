@@ -110,7 +110,7 @@ def getData(d:set)->list[dict]:
     return opt
             
             
-def LgetLaws(law: list[str]) -> list[dict]:
+def LgetLaws(laws: list[str]) -> list[dict]:
   """
   Retrieve a list of laws based on the given law name.
 
@@ -120,19 +120,26 @@ def LgetLaws(law: list[str]) -> list[dict]:
   Returns:
     list[dict]: A list of dictionaries representing the retrieved laws.
   """
-  with open(f"./database/{law}_laws.json", "r") as f: # loading the laws from the law file
-    data = json.load(f) # loading the data from the law file
-    size = len(data) 
-    if size <= 15:
-      return data
-    l = []
-    while len(l) < 15:
-      num = random.randint(0, size-1)
-      if num not in l:
-        l.append(num)
-    opt = []
-    for i in l:
-      opt.append(data[i])
-    return opt
+  per=15//len(laws)
+  last=15-per*(len(laws)-1)
+  opt=[]
+  x=0
+  for law in laws:
+    if x==len(laws)-1:
+      per=last
+    with open(f"./database/{law}_laws.json", "r") as f: # loading the laws from the law file
+      data = json.load(f) # loading the data from the law file
+      size = len(data) 
+      if size <= per:
+        return data
+      l = []
+      while len(l) < per:
+        num = random.randint(0, size-1)
+        if num not in l:
+          l.append(num)
+      for i in l:
+        opt.append(data[i])
+    x+=1
+  return opt
   
   
