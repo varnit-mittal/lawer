@@ -1,13 +1,10 @@
-import os
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.parsers import FileUploadParser, MultiPartParser 
 from rest_framework import status
-from django.http import FileResponse, HttpResponse, StreamingHttpResponse
-import firebase_admin
-import json
+from django.http import HttpResponse
 from .models import Folder
-from firebase_admin import credentials, storage
+from firebase_admin import storage
 from .serializers import FolderSerializer, FileSerializer
 
 class FolderView(APIView):
@@ -150,7 +147,9 @@ class GetFileView(APIView):
     def get(self, request):
         bucket = storage.bucket()
         try:
-            filename = request.data.get('filename')
+            filename = request.GET.get('filename')
+            if not filename:
+                return Response({'error': 'Please provide a filename.'}, status=status.HTTP_400_BAD_REQUEST)
             blob = bucket.blob(filename)
             file_content = blob.download_as_string()
             response = HttpResponse(file_content, content_type='application/octet-stream')
