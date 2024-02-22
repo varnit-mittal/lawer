@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_first/Pages/FolderPage.dart';
+import 'package:flutter_first/Pages/OptionsPage2.dart';
 import 'package:flutter_first/Pages/ResultsPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:convert';
@@ -92,33 +93,38 @@ value1=value;
                   width:170, //width of button
                   child: ElevatedButton(
                     onPressed: () async {
-
-
                       // Handle submit button tap
 
-
-                      String base=OpeningPage.baseUrl;
-                      final url =  OpeningPage.baseUrl+'caseQuery/';
+                      String base = OpeningPage.baseUrl;
+                      final url = OpeningPage.baseUrl + 'caseQuery/';
                       final body = jsonEncode({'input': value1});
 
                       final request = http.Request('GET', Uri.parse(url));
                       request.headers['Content-Type'] = 'application/json';
                       request.body = body;
-                      //
-                      // // Send the request and get the response.
+
+                      // Send the request and get the response.
                       final response = await request.send();
                       final responseBody = await response.stream.bytesToString();
 
-
-                      List myList= jsonDecode(responseBody);
-                      SearchPage.myl=myList;
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ResultsPage()),
-                      );
-
-
+                      // Check if the response status is 406
+                      if (response.statusCode == 406) {
+                        // Redirect to OptionsPage2
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => OptionsPage2()),
+                        );
+                      } else {
+                        // Redirect to ResultsPage
+                        List myList = jsonDecode(responseBody);
+                        SearchPage.myl = myList;
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => ResultsPage()),
+                        );
+                      }
                     },
+
                     child: Text('Submit',style: TextStyle(
     color: Colors.white,)),
 

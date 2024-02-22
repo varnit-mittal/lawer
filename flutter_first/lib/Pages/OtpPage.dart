@@ -175,14 +175,17 @@ class _OtpPageState extends State<OtpPage> {
     print("hello");
     try {
       // Create PhoneAuthCredential
+
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
         verificationId: verificationId,
         smsCode: code,
       );
+      print("hello2");
 
       // Sign in with the credential
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithCredential(credential);
+      print(userCredential.user);
 
       // Check if the user already exists
       if (userCredential.user!=null) {
@@ -190,6 +193,7 @@ class _OtpPageState extends State<OtpPage> {
         // print(OpeningPage.baseUrl);
         String uid = userCredential.user!.uid;
         OtpPage.Uid = uid;
+        // print(uid);
         final baseUrl = OpeningPage.baseUrl;
         final url = baseUrl + 'folder/';
 

@@ -1,30 +1,65 @@
 import 'package:flutter/material.dart';
-
+import 'package:flutter_first/main.dart';
+import 'package:flutter_first/Pages/ResultsPage2.dart';
+import 'dart:convert';
+import 'global.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_svg/flutter_svg.dart';
 
 class OptionsPage extends StatefulWidget {
   @override
   _OptionsPageState createState() => _OptionsPageState();
+  static List atae=[];
+
 }
 
 class _OptionsPageState extends State<OptionsPage> {
+
   List<String> options = [
-    'Option 1',
-    'Option 2',
-    'Option 3',
-    'Option 4',
-    'Option 5',
-    'Option 6',
-    'Option 7',
-    'Option 8',
-    'Option 9',
-    'Option 10',
-    'Option 11',
+    'Dowry',
+    'Arson',
+    'Corruption',
+    'Kidnapping',
+    'Murder',
+    'Rape',
+    'Smuggling',
+    'Suicide',
+    'Thievery',
+    'Terrorism',
+    'Tax Fraud',
+    'Sextortion',
   ];
   List<String> svgPaths = [
-    '',
-    '',
+    'lib/assets/Display_Dowry_value_dowry.svg',
+    'lib/assets/Display_Arson_value_arson.svg',
+    'lib/assets/Display_Corruption_value_corrupt.svg',
+    'lib/assets/Display_Kidnapping_value_kidnap.svg',
+    'lib/assets/Display_Murder_value_murder.svg',
+    'lib/assets/Display_Rape_value_rape.svg',
+    'lib/assets/Display_Smuggling_value_smug.svg',
+    'lib/assets/Display_Suicide_value_suicide.svg',
+    'lib/assets/Display_Thievery_value_theft.svg',
+    'lib/assets/Display_Terrorism_value_terror.svg',
+    'lib/assets/Display_Tax_Fraud_value_tax.svg',
+    'lib/assets/Display_Sextortion_value_sextor.svg',
+
     // Add more SVG paths for each option
   ];
+
+  final Map<String, String> customMap = {
+    'Dowry': 'dowry',
+    'Arson': 'arson',
+    'Corruption': 'corrupt',
+    'Kidnapping': 'kidnap',
+    'Murder': 'murder',
+    'Rape': 'rape',
+    'Smuggling': 'smug',
+    'Suicide': 'suicide',
+    'Thievery': 'theft',
+    'Terrorism': 'terror',
+    'Tax Fraud': 'tax',
+    'Sextortion': 'sextor',
+  };
 
   List<bool> selectedOptions = [];
 
@@ -42,7 +77,7 @@ class _OptionsPageState extends State<OptionsPage> {
       ),
       body: GridView.count(
         crossAxisCount: 2,
-        childAspectRatio: 1.5 / 1,
+        childAspectRatio: 1 / 0.8,
         mainAxisSpacing: 20,
         children: List.generate(options.length, (index) {
           return GestureDetector(
@@ -57,12 +92,12 @@ class _OptionsPageState extends State<OptionsPage> {
               height: 20,
               decoration: BoxDecoration(
                 color: selectedOptions[index]
-                    ? Colors.blue.withOpacity(0.5)
+                    ? getColorFromHex("#496ABF")
                     : Colors.grey.withOpacity(0),
-                borderRadius: BorderRadius.circular(0),
+                borderRadius: BorderRadius.circular(40),
                 border: Border.all(
                   color: selectedOptions[index]
-                      ? Colors.blue
+                      ? getColorFromHex("0E204E")
                       : Colors.grey.withOpacity(0.7),
                   width: 2,
                 ),
@@ -73,11 +108,14 @@ class _OptionsPageState extends State<OptionsPage> {
                   children: [
                     // Add your SVG icon here
                     SizedBox(
-                      width: 24,
-                      height: 24,
-                      // child: CustomPaint(
-                      //   painter: _MyPainter(svgPath: svgPaths[index]),
-                      // ),
+                      width: 84,
+                      height: 84,
+                      child:SvgPicture.asset(
+                        svgPaths[index],
+                         width: 1.2,
+                         height:  0.8,
+                        fit: BoxFit.cover,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -88,7 +126,7 @@ class _OptionsPageState extends State<OptionsPage> {
                             ? FontWeight.bold
                             : FontWeight.normal,
                         color: selectedOptions[index]
-                            ? Colors.blue
+                            ? Colors.black
                             : Colors.black,
                       ),
                     ),
@@ -103,21 +141,50 @@ class _OptionsPageState extends State<OptionsPage> {
         width: 100,
         height: 100,
         child: FloatingActionButton(
-          onPressed: () {
+          onPressed: () async {
             List<String> selected = [];
             for (int i = 0; i < options.length; i++) {
               if (selectedOptions[i]) {
                 selected.add(options[i]);
               }
             }
+
+              final url = OpeningPage.baseUrl+'getLaws/';
+
+              List<String> mylist=[];
+              for(int i=0;i<selected.length;i++)
+                {
+                  mylist.add(customMap[selected[i]]!);
+                }
+
+              final body = jsonEncode({'lawName': mylist});
+
+              // // Create the HTTP request.
+              final request = http.Request('GET', Uri.parse(url));
+              request.headers['Content-Type'] = 'application/json';
+              request.body = body;
+              //
+              // // Send the request and get the response.
+              final response = await request.send();
+              final responseBody = await response.stream.bytesToString();
+            List myList= jsonDecode(responseBody);
+            OptionsPage.atae=myList;
+
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => ResultsPage2()),
+            );
+  print(responseBody);
+
             // Do something with the selected options, for example:
             print('Selected options: $selected');
           },
-          backgroundColor: Colors.blue,
+          backgroundColor: getColorFromHex("0E204E"),
           splashColor: Colors.lightBlue,
           child: Icon(
             Icons.check,
-            size: 36,
+            size: 40,
+            color: Colors.white,
           ),
         ),
       ),
@@ -125,6 +192,13 @@ class _OptionsPageState extends State<OptionsPage> {
   }
 }
 
+Color getColorFromHex(String hexColor) {
+  hexColor = hexColor.toUpperCase().replaceAll("#", "");
+  if (hexColor.length == 6) {
+    hexColor = "FF" + hexColor;
+  }
+  return Color(int.parse(hexColor, radix: 16));
+}
 
 void main() {
   runApp(MaterialApp(
