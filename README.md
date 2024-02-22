@@ -14,9 +14,9 @@ Django Rest-Framework is used to create an API which powers the application.
 ## Features
 
 - An OTP login service is used so that there is no need for password management.
-- An exntensive file sotrage system is provided with the help of Firebase Storage for better management of your legal files. 
+- An extensive file storage system is provided with the help of Firebase Storage for better management of your legal files. 
 - With Gemini's assistance, a precedent-searching system is created that produces highly relatable results based on the user-provided case.
-- Efficient law searching is used to provide relevant laws to the user based ont heir query. User can also provide multiple queries which are also handled efficiently using keyword search.
+- Efficient law searching is used to provide relevant laws to the user based ont heir query. User can also provide multiple queries which are also handled efficiently using keyword searching.
 - The app can also used by students who are currently pursuing law in order to get various case studies for different scenarios they proivde to the app.
 
 
@@ -24,7 +24,7 @@ Django Rest-Framework is used to create an API which powers the application.
 
 **Client:** Flutter, Firebase
 
-**Server:** Django, Firebase, Gemini
+**Server:** Django, Django-REST, Firebase, Gemini 
 
 
 ## Environment Variables for Back-End
@@ -35,7 +35,7 @@ To run this project, you will need to add the following environment variables to
 
 `FIREBASE_SDK`which is your Firebase private key
 
-`KANNON`which is an API to fetch documents from central Government repository
+`KANNON`which is an API to fetch documents from Central Government repository 
 
 `ADMIN` the admin url to manage your backend
 
@@ -44,7 +44,7 @@ To run this project, you will need to add the following environment variables to
 
 #### Get all items
 
-```http
+```bash
   GET https://api.indiankanoon.org/doc/${id}
 ```
 
@@ -54,7 +54,7 @@ To run this project, you will need to add the following environment variables to
 
 #### Fetches the necessary documents from Central Government Repository
 
-```http
+```bash
   GET Gemini
 ```
 
