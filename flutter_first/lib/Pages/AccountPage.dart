@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_first/main.dart'; // Assuming OpeningPage is in main.dart
 import 'package:flutter_first/Pages/FolderPage.dart';
+import 'package:flutter_first/Pages/SearchPage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AccountPage extends StatelessWidget {
@@ -54,6 +56,33 @@ class AccountPage extends StatelessWidget {
           SizedBox(height: 30),
           InformationField(label: 'Date of Birth', value: 'January 1, 2000', fontSize: 20),
           SizedBox(height: 50),
+          // Logout Button
+      SizedBox(
+    height:70, //height of button
+    width:170, //width of button
+
+    child: ElevatedButton(
+    onPressed: () {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => OpeningPage()), // Assuming OpeningPage is in main.dart
+            (route) => false, // Clear all routes except for the new one
+      );
+    },
+      child: Text('Logout',style: TextStyle(
+        color: Colors.white,)),
+
+      style: ElevatedButton.styleFrom(
+        primary: getColorFromHex("0E204E"),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+
+
+        ),
+      ),
+    ),
+            ),
+
         ],
       ),
       bottomNavigationBar: BottomAppBar(
@@ -68,6 +97,11 @@ class AccountPage extends StatelessWidget {
                 height: 40,
               ),
               onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SearchPage()),
+                );
                 // Handle search button tap
               },
             ),

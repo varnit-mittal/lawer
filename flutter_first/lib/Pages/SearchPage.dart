@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_first/Pages/AccountPage.dart';
 import 'package:flutter_first/Pages/FolderPage.dart';
 import 'package:flutter_first/Pages/OptionsPage2.dart';
 import 'package:flutter_first/Pages/ResultsPage.dart';
@@ -129,7 +130,7 @@ value1=value;
     color: Colors.white,)),
 
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.blue,
+                      primary: getColorFromHex("0E204E"),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
 
@@ -182,6 +183,11 @@ value1=value;
               ),
               onPressed: () {
                 // Handle profile button tap
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => AccountPage()), // Assuming OpeningPage is in main.dart
+                      (route) => false, // Clear all routes except for the new one
+                );
               },
             ),
           ],

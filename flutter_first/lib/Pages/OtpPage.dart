@@ -60,16 +60,7 @@ class _OtpPageState extends State<OtpPage> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   // Remaining time text
-                  _start == 0
-                      ? TextButton(
-                    onPressed: () {
-                      // Reset timer and resend OTP
-                      _start = 60;
-                      startTimer();
-                    },
-                    child: Text("Resend OTP"),
-                  )
-                      : Text("Resend OTP in $_start seconds"),
+
                   Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -159,6 +150,16 @@ class _OtpPageState extends State<OtpPage> {
                       ),
                     ),
                   ),
+                  _start == 0
+                      ? TextButton(
+                    onPressed: () {
+                      // Reset timer and resend OTP
+                      _start = 60;
+                      startTimer();
+                    },
+                    child: Text("Resend OTP"),
+                  )
+                      : Text("Resend OTP in $_start seconds"),
                 ],
               ),
             ),
@@ -172,6 +173,7 @@ class _OtpPageState extends State<OtpPage> {
       String verificationId, String code) async {
     print(code);
     print(verificationId);
+
     print("hello");
     try {
       // Create PhoneAuthCredential
@@ -188,10 +190,15 @@ class _OtpPageState extends State<OtpPage> {
       print(userCredential.user);
 
       // Check if the user already exists
-      if (userCredential.user!=null) {
+      if (true) {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DashboardPage()),
 
-        // print(OpeningPage.baseUrl);
+        ); //
+        print(OpeningPage.baseUrl);
         String uid = userCredential.user!.uid;
+        print(uid);
         OtpPage.Uid = uid;
         // print(uid);
         final baseUrl = OpeningPage.baseUrl;
@@ -233,8 +240,8 @@ class _OtpPageState extends State<OtpPage> {
         var response3 = await request3.send();
         var responseBody3 = await response3.stream.bytesToString();
         print(responseBody3);
-
-
+        //
+        //
         final body4 = jsonEncode({'name': uid + '/Judgement'});
         var request4 = http.Request('POST', Uri.parse(url));
         request4.headers['Content-Type'] = 'application/json';
@@ -243,15 +250,11 @@ class _OtpPageState extends State<OtpPage> {
         var response4 = await request4.send();
         var responseBody4 = await response4.stream.bytesToString();
         print(responseBody4);
+        //
+        //
+        //
 
-
-
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardPage()),
-
-        ); // Replace '/signup' with your actual route name
+        // Replace '/signup' with your actual route name
       } else {
         Navigator.push(
           context,

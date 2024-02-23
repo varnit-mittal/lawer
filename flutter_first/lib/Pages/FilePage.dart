@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,6 +12,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_first/main.dart';
 import 'package:path/path.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class FilePage extends StatefulWidget {
   @override
@@ -36,6 +38,8 @@ class _FilePageState extends State<FilePage> {
     if (reload==1)
       {
         files.clear();
+        Folders.clear();
+        items.clear();
       }
     final body = jsonEncode({'uid': filePath});
     final url = OpeningPage.baseUrl + 'file/';
@@ -108,17 +112,20 @@ class _FilePageState extends State<FilePage> {
             });
           },
         )
-            : Text('Files',style: TextStyle(fontSize: 32),),
+            : Text(
+          'Files',
+          style: TextStyle(fontSize: 32),
+        ),
         leading: GestureDetector(
-          onTap: () async{
+          onTap: () async {
             // Handle tap on the back button
             print("hello");
-            List<String> myList= filePath.split("/");
+            List<String> myList = filePath.split("/");
             myList.removeLast();
-            filePath=myList.join("/");
+            filePath = myList.join("/");
             Navigator.pop(context);
           },
-          child: Icon(Icons.arrow_back,size: 40),
+          child: Icon(Icons.arrow_back, size: 40),
         ),
         actions: [
           IconButton(
@@ -140,7 +147,14 @@ class _FilePageState extends State<FilePage> {
           // Handle tapping anywhere on the body
           print('Tapped on the body');
         },
-        child: GridView.builder(
+        child: items.isEmpty
+            ? Center(
+          child: Text(
+            "No files and folders found",
+            style: TextStyle(fontSize: 18),
+          ),
+        )
+            : GridView.builder(
           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 2,
             crossAxisSpacing: 8.0,
@@ -148,7 +162,8 @@ class _FilePageState extends State<FilePage> {
           ),
           itemCount: isSearching ? filtereditems.length : items.length,
           itemBuilder: (context, index) {
-            final itemName = isSearching ? filtereditems[index] : items[index];
+            final itemName =
+            isSearching ? filtereditems[index] : items[index];
             final isFolder = Folders.contains(itemName);
             return InkWell(
               onLongPress: () {
@@ -163,64 +178,58 @@ class _FilePageState extends State<FilePage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           TextButton(
-                            onPressed: () async{
+                            onPressed: () async {
 
-                              int flag=0;
-                              String temp="";
-                              for(int i=0;i<itemName.length;i++)
-                                {
-                                  if(itemName[i]=='.')
-                                    {
-                                      flag=1;
-                                      break;
-                                    }
+                              int flag = 0;
+                              String temp = "";
+                              for (int i = 0; i < itemName.length; i++) {
+                                if (itemName[i] == '.') {
+                                  flag = 1;
+                                  break;
                                 }
+                              }
 
-                              if(flag!=1)
-                                {
-                                  temp+=itemName+'/';
-                                }
-                              else
-                                {
-                                  temp=itemName;
-                                }
+                              if (flag != 1) {
+                                temp += itemName + '/';
+                              } else {
+                                temp = itemName;
+                              }
 
-                              setState(()  {
+                              setState(() {
                                 items.remove(itemName);
                                 files.remove(itemName);
                                 Folders.remove(itemName);
-                                // print(itemName);
-
-
                               });
                               Navigator.pop(context); //
-                              final url = OpeningPage.baseUrl+'file/';
-                              final body = jsonEncode({'name': filePath+'/'+temp});
-// print(filePath);
-                              //
-                              // // Create the HTTP request.
-                              final request = http.Request('DELETE', Uri.parse(url));
-                              request.headers['Content-Type'] = 'application/json';
+                              final url =
+                                  OpeningPage.baseUrl + 'file/';
+                              final body = jsonEncode({
+                                'name': filePath + '/' + temp
+                              });
+
+                              final request = http.Request(
+                                  'DELETE', Uri.parse(url));
+                              request.headers['Content-Type'] =
+                              'application/json';
                               request.body = body;
-                              //
-                              // // Send the request and get the response.
+
                               final response = await request.send();
-                              final responseBody = await response.stream.bytesToString();
-                              // Handle any other necessary updates
-                              // Close the dialog
+                              final responseBody = await response.stream
+                                  .bytesToString();
+
                             },
-                            child: Text('Delete',
+                            child: Text(
+                              'Delete',
                               style: TextStyle(fontSize: 22),
                             ),
                           ),
-
                         ],
                       ),
                     );
                   },
                 );
               },
-              onTap: () async{
+              onTap: () async {
                 if (isFolder) {
                   // Handle itemName tap
                   // print("*********$itemName");
@@ -230,12 +239,51 @@ class _FilePageState extends State<FilePage> {
                     MaterialPageRoute(builder: (context) => FilePage()),
                   );
                 } else {
-                  final url2= OpeningPage.baseUrl+'getfile/?filename='+filePath+'/'+itemName;
-                  var dio = Dio();
-                  var path = "/storage/emulated/0/Download/";
-                  var dir = Directory(path);
-                  var response = await dio.download(url2, '${dir.path}/$itemName');
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(itemName),
+                        content: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
 
+
+                            ListTile(
+                              title: Text('Download'),
+                              onTap: () async {
+                                var status = await Permission.storage.status;
+                                if (!status.isGranted) {
+                                  print("hello");
+                                  await Permission.storage.request();
+                                }
+                                AwesomeNotifications().createNotification(content: NotificationContent(id: 10, channelKey: 'basic_channel',
+                                  title: 'FILE IS DOWNLOADED',
+                                  body: "Aryaman",
+                                ),);
+                                final url2 = OpeningPage.baseUrl +
+                                    'getfile/?filename=' +
+                                    filePath +
+                                    '/' +
+                                    itemName;
+                                var dio = Dio();
+                                var path = '/storage/emulated/0/Download/';
+                                var dir = Directory(path);
+                                var response = await dio.download(
+                                    url2, '${dir.path}/$itemName');
+
+
+                                Navigator.pop(context);
+                                _showAlertDialog(context);
+                                // Call function to handle file download
+
+                              },
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  );
                 }
               },
               child: Column(
@@ -244,7 +292,9 @@ class _FilePageState extends State<FilePage> {
                   Icon(
                     isFolder ? Icons.folder : Icons.file_copy,
                     size: isFolder ? 98.0 : 98.0,
-                    color: isFolder ? getColorFromHex("0E204E") : null,
+                    color: isFolder
+                        ? getColorFromHex("0E204E")
+                        : null,
                   ), // Larger folder or file icon
                   SizedBox(height: 8.0),
                   Text(itemName),
@@ -252,20 +302,8 @@ class _FilePageState extends State<FilePage> {
               ),
             );
           },
-        )
-
+        ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: () {
-      //     _showAddOptionDialog(context);
-      //   },
-      //   backgroundColor: Colors.blue,
-      //   child: Icon(
-      //     Icons.add,
-      //     color: Colors.white,
-      //   ),
-      // ),
-      //
       floatingActionButton: SizedBox(
         width: 100,
         height: 100,
@@ -273,7 +311,6 @@ class _FilePageState extends State<FilePage> {
           onPressed: () {
             _showAddOptionDialog(context);
             // Do something with the selected options, for example:
-
           },
           backgroundColor: getColorFromHex("0E204E"),
           splashColor: Colors.lightBlue,
@@ -287,6 +324,7 @@ class _FilePageState extends State<FilePage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
 
   void _showAddOptionDialog(BuildContext context) {
     showDialog(
@@ -421,7 +459,44 @@ Color getColorFromHex(String hexColor) {
   }
   return Color(int.parse(hexColor, radix: 16));
 }
-
+void _showAlertDialog(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Alert'),
+        content: Text('File  has been downloaded in your Download folder.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
+void _showAlertDialog2(BuildContext context) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Alert'),
+        content: Text('File  has been deleted.'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: Text('OK'),
+          ),
+        ],
+      );
+    },
+  );
+}
 void main() {
   runApp(MaterialApp(
     home: FilePage(),
