@@ -64,7 +64,19 @@ To run this project, you will need to add the following environment variables to
 
 #### Used to Serialize the query enetered by the user
 
+## Backend endpoints
 
+| URL| Use   | 
+| :-------- | :------- | 
+| `/ADMIN` | admin controller page |
+| `/folder/` | to create  a new folder | 
+| `/file/` | to get all the files and the folders and delete also |
+| `/fileUpload/` | upload or update your file to your firebase storage |
+| `/getfile/` | download the file |
+| `/caseQuery/` | to enquire about your case |
+| `/listQuery/` | in case your query is very sensitive |
+| `/getLaws/` | to get the appropriate law according to your query |
+| `/getDocument/` | to fetch the full document from Central Government Repository |
 
 ## Run Locally Back-End
 
