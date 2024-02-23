@@ -12,7 +12,6 @@ flutter_first is a versatile project designed for legal aid purposes, this proje
 
 - [Contributing](#contributing)
 
-- [License](#license)
   
 
 ## Features 
@@ -61,28 +60,4 @@ We welcome contributions to flutter_first. If you would like to contribute to th
 
 5. Submit a pull request to the main repository.
 
-## license
 
-
-## <b> Contact Info</b><img src="https://github.com/0xAbdulKhalid/0xAbdulKhalid/raw/main/assets/mdImages/handshake.gif" width ="80">
-<br>
-<div align='left'>
-
-<ul>
-
-<li>
-<a href="https://www.linkedin.com/in/siddharth-vikram-523835219/" target="_blank">
-<img src="https://img.shields.io/badge/linkedin:  Siddharth Vikram-%2300acee.svg?color=405DE6&style=for-the-badge&logo=linkedin&logoColor=white" alt=linkedin style="margin-bottom: 5px;"/>
-</a>
-</li>
-
-<br>
-
-<li>
-<a href="https://www.linkedin.com/in/aryaman-pathak/" target="_blank">
-<img src="https://img.shields.io/badge/linkedin:  Aryaman Pathak-%2300acee.svg?color=405DE6&style=for-the-badge&logo=linkedin&logoColor=white" alt=linkedin style="margin-bottom: 5px;" />
-</a>
-</li>
-	
-</ul>
-</div>
