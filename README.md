@@ -107,7 +107,7 @@ Start the server
 
 ## Demo
 
-Insert gif or link to demo
+[Demo](https://youtu.be/iSzLJeeK6OI?si=kS2fCycNySXhdL3p)
 
 
 ## Documentation
