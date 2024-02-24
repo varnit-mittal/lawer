@@ -68,7 +68,7 @@ To run this project, you will need to add the following environment variables to
 
 | URL| Use   | 
 | :-------- | :------- | 
-| `/ADMIN` | admin controller page |
+| `/<ADMIN>` | admin controller page |
 | `/folder/` | to create  a new folder | 
 | `/file/` | to get all the files and the folders and delete also |
 | `/fileUpload/` | upload or update your file to your firebase storage |
