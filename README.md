@@ -112,7 +112,7 @@ Start the server
 
 ## Documentation
 
-[Documentation](https://linktodocumentation)
+[Documentation](https://varnit-mittal.github.io/Lawer-docs/)
 
 
 ## Feedback
