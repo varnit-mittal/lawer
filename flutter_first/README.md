@@ -1,6 +1,6 @@
 # flutter_first ReadMe
 
-flutter_first is a versatile project designed for legal aid purposes, this project comprises of the frontend interface for our submission to the google Solutions challenge 2024. This comprehensive guide will provide you with everything you need to know to get started with the project, from installation instructions to a detailed description of its features.
+flutter_first is a versatile project designed for legal aid purposes, this project comprises of the frontend. This comprehensive guide will provide you with everything you need to know to get started with the project, from installation instructions to a detailed description of its features.
 
 ## Table of Contents
 
